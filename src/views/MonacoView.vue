@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import MonacoEditor from '../components/MonacoEditor.vue';
-
+import MonacoEditor from '../components/monaco/MonacoEditor.vue'
 </script>
 
 <template>
-    <div class="monaco">
-        <MonacoEditor />
-    </div>
-  </template>
-  
+  <div class="monaco">
+    <MonacoEditor />
+  </div>
+</template>
 
 <style>
 @media (min-width: 1024px) {
