@@ -13,5 +13,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  base: '/vue/'
+  base: process.env.NODE_ENV === 'production'
+    ? '/' + process.env.CI_PROJECT_NAME + '/'
+    : '/'
 })
