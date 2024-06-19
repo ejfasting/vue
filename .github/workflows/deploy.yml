@@ -11,9 +11,10 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@master
+        uses: actions/checkout@main
         with:
           persist-credentials: false
+          submodules: recursive  # Ensure submodules are checked out
 
       - name: Install 🔧
         run: yarn install
