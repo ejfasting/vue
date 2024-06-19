@@ -11,16 +11,19 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@main
+        uses: actions/checkout@master
         with:
           persist-credentials: false
           submodules: recursive  # Ensure submodules are checked out
+            
+      - name: Install pnpm
+        run:  npm install -g pnpm
 
-      - name: Install 🔧
-        run: yarn install
+      - name: Install dependencies 🧶
+        run: pnpm install
 
-      - name: Build 🏗️
-        run: yarn build
+      - name: Build the project
+        run: pnpm run build-only
         env:
           NODE_ENV: production
 
