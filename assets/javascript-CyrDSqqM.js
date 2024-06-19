@@ -1,4 +1,4 @@
-import{conf as t,language as e}from"./typescript-CKT_BLsZ.js";import"./MonacoView-mPzYmWxJ.js";import"./main-CjImLQ0F.js";/*!-----------------------------------------------------------------------------
+import{conf as t,language as e}from"./typescript-CQzfi96e.js";import"./MonacoView-C6rc8Nkz.js";import"./main-qp-nZy6t.js";/*!-----------------------------------------------------------------------------
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Version: 0.47.0(69991d66135e4a1fc1cf0b1ac4ad25d429866a0d)
  * Released under the MIT license
