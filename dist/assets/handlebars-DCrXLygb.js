@@ -1,4 +1,4 @@
-import{m as i}from"./MonacoView-CDoB_jij.js";import"./index-BI81Qsjn.js";/*!-----------------------------------------------------------------------------
+import{m as i}from"./MonacoView-BNUKJXoU.js";import"./index-BY5YRSz2.js";/*!-----------------------------------------------------------------------------
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Version: 0.47.0(69991d66135e4a1fc1cf0b1ac4ad25d429866a0d)
  * Released under the MIT license
