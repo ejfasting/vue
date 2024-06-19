@@ -1,5 +1,4 @@
 <template>
-  <h2>Monaco Editor</h2>
   <div class="editor" ref="editorContainer"></div>
 </template>
 
