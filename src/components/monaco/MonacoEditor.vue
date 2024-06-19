@@ -116,10 +116,6 @@ export default defineComponent({
   border: 1px solid #ccc;
 }
 
-.monaco-editor {
-  padding-top: 20px;
-}
-
 .editor {
   flex-grow: 1;
   width: 100%;
