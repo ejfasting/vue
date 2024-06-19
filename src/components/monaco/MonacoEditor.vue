@@ -1,85 +1,53 @@
 <template>
-  <h1>The header 6</h1>
-  <div class="editor" ref="editorContainer"></div>
+  <div class="editor-container">
+    <h2 style="text-align: center">Monaco editor</h2>
+    <div class="editor-toolbar">
+      <label for="theme-select">Theme:</label>
+      <select id="theme-select" v-model="selectedTheme" @change="changeTheme">
+        <option v-for="theme in themes" :key="theme" :value="theme">{{ theme }}</option>
+      </select>
+    </div>
+    <div class="editor" ref="editorContainer"></div>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, onBeforeUnmount, ref } from 'vue'
 import * as monaco from 'monaco-editor'
-import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
-import customWorker from './custom.worker?worker'
-import type { LanguageService } from '@volar/language-service'
-import { activateMarkers, activateAutoInsertion, registerProviders } from '@volar/monaco'
-import { customLanguage } from './constants'
+import { customLanguage, themes } from './constants'
+import { setupEditor } from './editorSetup'
 import { getOrCreateModel } from './utils'
-import { getHighlighter } from 'shiki'
-import { shikiToMonaco } from '@shikijs/monaco'
 
 export default defineComponent({
   name: 'MonacoEditor',
   setup() {
     const editorContainer = ref<HTMLElement | null>(null)
+    const selectedTheme = ref(themes[0]) // Default to the first theme
     let editorInstance: monaco.editor.IStandaloneCodeEditor | null = null
     const modelUri = monaco.Uri.parse('file:///main.' + customLanguage.id)
 
-    onMounted(async () => {
-      self.MonacoEnvironment = {
-        getWorker(_, label) {
-          if (label === customLanguage.id) {
-            return new customWorker()
-          }
-          return new editorWorker()
-        }
+    const handleResize = () => {
+      if (editorInstance) {
+        editorInstance.layout()
       }
+    }
 
-      const highlighter = await getHighlighter({
-        langs: ['typescript'],
-        langAlias: {
-          jsfso: 'typescript'
-        },
-        themes: ['andromeeda']
-      })
+    const changeTheme = () => {
+      if (editorInstance) {
+        monaco.editor.setTheme(selectedTheme.value)
+      }
+    }
 
-      monaco.languages.register({
-        id: customLanguage.id,
-        extensions: [customLanguage.fileExtension]
-      })
-
-      // Register the themes from Shiki, and provide syntax highlighting for Monaco.
-      shikiToMonaco(highlighter, monaco)
-
-      monaco.languages.onLanguage(customLanguage.id, () => {
-        const worker = monaco.editor.createWebWorker<LanguageService>({
-          moduleId: 'vs/language/' + customLanguage.id + '/' + customLanguage.id + 'Worker',
-          label: customLanguage.id
-        })
-        const getSyncUris = () => monaco.editor.getModels().map((model) => model.uri)
-        activateMarkers(
-          worker,
-          [customLanguage.id],
-          customLanguage.id + '-markers-owner',
-          // sync files
-          getSyncUris,
-          monaco.editor
-        )
-        // auto close tags
-        activateAutoInsertion(
-          worker,
-          [customLanguage.id],
-          // sync files
-          getSyncUris,
-          monaco.editor
-        )
-        registerProviders(worker, [customLanguage.id], getSyncUris, monaco.languages)
-      })
-
+    onMounted(async () => {
+      await setupEditor()
       const model = getOrCreateModel(modelUri, customLanguage.id, customLanguage.initialCode)
-
       if (editorContainer.value) {
         editorInstance = monaco.editor.create(editorContainer.value, {
-          //theme: 'vs-dark',
-          model: model
+          model: model,
+          language: customLanguage.id,
+          theme: selectedTheme.value,
         })
+        window.addEventListener('resize', handleResize)
       }
     })
 
@@ -87,18 +55,75 @@ export default defineComponent({
       if (editorInstance) {
         editorInstance.dispose()
       }
+      window.removeEventListener('resize', handleResize)
     })
 
     return {
-      editorContainer
+      editorContainer,
+      selectedTheme,
+      changeTheme,
+      themes
     }
   }
 })
 </script>
 
 <style>
-.editor {
+.editor-container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  height: 50vh;
+  height: 100vh; /* Full height to utilize entire viewport */
 }
+
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f3f3f3;
+  border-bottom: 1px solid #ccc;
+}
+
+.editor-toolbar label {
+  margin-right: 10px;
+  color: black;
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  line-height: 1.6;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.editor-toolbar select {
+  padding: 5px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
+
+.monaco-editor {
+  padding-top: 20px;
+}
+
+.editor {
+  flex-grow: 1;
+  width: 100%;
+}
+
+
 </style>
