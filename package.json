@@ -8,7 +8,7 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
-    "deploy": "git commit -m \"Force commit of all changes, before deploy\" && git push && pnpm run build-only && git add dist -f && git commit -m \"Deploy to gh-pages\" && git subtree push --prefix dist origin gh-pages",
+    "deploy": "pnpm run build-only && git add dist -f && git commit -m \"Deploy to gh-pages\" && git subtree push --prefix dist origin gh-pages",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/"
