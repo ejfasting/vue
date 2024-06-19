@@ -13,5 +13,15 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  base: '/vue/'
+  base: '/vue/',
+  build: {
+    rollupOptions: {
+      input: {
+        main: 'src/main.ts',
+        // Add your additional HTML file entry here
+        index: 'index.html',
+        errorPage: '404.html',
+      },
+    },
+  },
 })
