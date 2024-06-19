@@ -1,13 +1,23 @@
 export const customLanguage: Language = {
   id: 'jsfso',
   fileExtension: '.jsfso',
-  initialCode: `const cAgent = SO.getContactAgent();
+  initialCode: `%EJSCRIPT_START%
+<style>.foo { c }</style>
+<div></div>
+<%
+const cAgent = SO.getContactAgent();
 const cEntity = await cAgent.createDefaultContactEntityAsync();
 cEntity.name = "BigCompany AS";
-        
+
 const pAgent = SO.getPersonAgent();
 const pEntity = await pAgent.createDefaultPersonEntityAsync();
-pEntity.firstname = "123";`
+pEntity.firstname = "123";
+
+%>
+<script> 
+let foo: string = 123; 
+</script>
+%EJSCRIPT_END%`
 }
 
 export interface Language {
