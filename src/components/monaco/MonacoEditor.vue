@@ -1,5 +1,5 @@
 <template>
-  <h1>The header</h1>
+  <h1>The header 2</h1>
   <div class="editor" ref="editorContainer"></div>
 </template>
 
