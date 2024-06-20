@@ -20,7 +20,7 @@ export default defineConfig({
         main: 'src/main.ts',
         // Add your additional HTML file entry here
         index: 'index.html',
-        errorPage: '404.html',
+        errorPage: '404.html'
       },
     },
   },

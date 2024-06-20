@@ -6,6 +6,7 @@ import { shikiToMonaco } from '@shikijs/monaco'
 import * as monaco from 'monaco-editor'
 import type { LanguageService } from '@volar/language-service'
 import { activateMarkers, activateAutoInsertion, registerProviders } from '@volar/monaco'
+import { syntax } from "./syntax"
 
 export async function setupEditor(): Promise<void> {
 self.MonacoEnvironment = {
@@ -17,11 +18,24 @@ self.MonacoEnvironment = {
     }
   }
 
+  //Figure out how to solve this when build for production
+  //const languageResult = await fetch('./syntax/tsfso.tmLanguage.json');
+  //const jsfsoLang = JSON.parse(await languageResult.text());
+  const jsfsoLang = JSON.parse(syntax);
   const highlighter = await getHighlighter({
-    langs: ['typescript'],
-    langAlias: {
-      jsfso: 'typescript'
-    },
+    langs: [
+      'typescript',
+      'html',
+      {
+        name: 'jsfso',
+        scopeName: 'source.jsfso',
+        embeddedLangs: [
+          'typescript',
+          'html'
+        ],
+        ...jsfsoLang
+      }
+    ],
     themes: themes
   })
 

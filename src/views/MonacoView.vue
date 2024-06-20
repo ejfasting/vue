@@ -3,9 +3,11 @@ import MonacoEditor from '../components/monaco/MonacoEditor.vue'
 </script>
 
 <template>
+  <Suspense>
   <div class="monaco">
     <MonacoEditor />
   </div>
+</Suspense>
 </template>
 
 <style>

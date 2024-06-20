@@ -18,14 +18,15 @@ import { customLanguage, themes } from './constants'
 import { setupEditor } from './editorSetup'
 import { getOrCreateModel } from './utils'
 
+
 export default defineComponent({
   name: 'MonacoEditor',
-  setup() {
+  async setup() {
     const editorContainer = ref<HTMLElement | null>(null)
     const selectedTheme = ref(themes[0]) // Default to the first theme
     let editorInstance: monaco.editor.IStandaloneCodeEditor | null = null
     const modelUri = monaco.Uri.parse('file:///main.' + customLanguage.id)
-
+      
     const handleResize = () => {
       if (editorInstance) {
         editorInstance.layout()
@@ -45,8 +46,9 @@ export default defineComponent({
         editorInstance = monaco.editor.create(editorContainer.value, {
           model: model,
           language: customLanguage.id,
-          theme: selectedTheme.value,
+          theme: selectedTheme.value
         })
+
         window.addEventListener('resize', handleResize)
       }
     })
@@ -120,6 +122,15 @@ export default defineComponent({
   flex-grow: 1;
   width: 100%;
 }
+
+/* .myGlyphMarginClass {
+	background: red;
+  border-radius: 50%;
+}
+
+.myContentClass {
+	background: rgba(80, 82, 82, 0.5);
+} */
 
 
 </style>
