@@ -17,10 +17,7 @@ import * as monaco from 'monaco-editor'
 import { customLanguage, themes } from './constants'
 import { setupEditor } from './editorSetup'
 import { getOrCreateModel } from './utils'
-
-import * as Y from 'yjs'
-import { WebsocketProvider } from 'y-websocket'
-import { MonacoBinding } from 'y-monaco'
+import { setupYjs } from './yjsSteup'
 
 export default defineComponent({
   name: 'MonacoEditor',
@@ -45,13 +42,6 @@ export default defineComponent({
     onMounted(async () => {
       await setupEditor()
 
-      const ydocument = new Y.Doc()
-      const provider = new WebsocketProvider(
-        "wss://ejfasting.github.io",
-        "monaco",
-        ydocument
-      );
-      const type = ydocument.getText('monaco')
 
 
       const model = getOrCreateModel(modelUri, customLanguage.id, customLanguage.initialCode)
@@ -61,39 +51,7 @@ export default defineComponent({
           language: customLanguage.id,
           theme: selectedTheme.value
         })
-
-        // var username = prompt(
-        //   "Please enter your name",
-        //   Math.floor(Math.random() * 10) + "User"
-        // );
-
-        // if (username === " ") {
-        //     username = Math.floor(Math.random() * 10) + "User";
-        //   }
-
-
-        // // All of our network providers implement the awareness crdt
-        // const awareness = provider.awareness
-
-        // // You can observe when a user updates their awareness information
-        // awareness.on('change', changes => {
-        //   // Whenever somebody updates their awareness information,
-        //   // we log all awareness information from all users.
-        //   console.log(Array.from(awareness.getStates().values()))
-        // })
-
-        // // You can think of your own awareness information as a key-value store.
-        // // We update our "user" field to propagate relevant user information.
-        // awareness.setLocalStateField('user', {
-        //   // Define a print name that should be displayed
-        //   name: username,
-        //   // Define a color that should be associated to the user:
-        //   color: '#ffb61e' // should be a hex color
-        // })
-
-        // Bind Yjs to the editor model
-        new MonacoBinding(type, editorInstance.getModel(), new Set([editorInstance]), provider.awareness);
-
+        //setupYjs(editorInstance, customLanguage.initialCode);
         window.addEventListener('resize', handleResize)
       }
     })
