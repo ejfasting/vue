@@ -30,8 +30,9 @@ export default defineComponent({
     const selectedTheme = ref(themes[0]); // Default to the first theme
     let editorInstance: monaco.editor.IStandaloneCodeEditor | null = null;
     const modelUri = monaco.Uri.parse('file:///main.' + customLanguage.id);
-    let fullscreen = false;
-
+    let isFullScreen = false;
+    var currentWindowHeight = window.innerHeight;
+    
     const handleResize = () => {
       if (editorInstance) {
         editorInstance.layout();
@@ -48,14 +49,14 @@ export default defineComponent({
       const element = document.querySelector(".editor-container");
       const btn = document.getElementById("btn-screen-mode");
       if(!element || !btn) return console.error("Element not found");
-      if(!fullscreen){
+      if(!isFullScreen){
         if (element.requestFullscreen) {
             element.requestFullscreen().catch(err => {
               console.log(err);
             });
             btn.classList.remove("enter-fullscreen");
             btn.classList.add("exit-fullscreen");
-            fullscreen = true;
+            isFullScreen = true;
           }
           else {
             console.log("Fullscreen not supported in this browser");
@@ -65,11 +66,48 @@ export default defineComponent({
       else
       {
         document.exitFullscreen();
-        fullscreen = false;
+        isFullScreen = false;
         btn.classList.remove("exit-fullscreen");
         btn.classList.add("enter-fullscreen");
       }
     };
+
+     /**
+      * Prevents browser to toggle default fullscreen mode and uses the custom fullscreen method
+      */
+      function useCustomFullScreen(event: { key: string; preventDefault: () => void; }) {
+        console.log(event.key);
+        if (event.key === "F11") {
+            event.preventDefault();
+            toggleFullscreen();
+        }
+      }
+
+      /**
+    * Detects if the browser is exiting fullscreen mode when window resize
+    */
+    function isExitingFullScreen() {
+      if (isFullScreen && currentWindowHeight >= window.innerHeight) {
+        isFullScreen = false;
+        currentWindowHeight = window.innerHeight;
+        
+        // Do your full screen mode stuff 
+        updateBtn();
+      }
+    }
+
+    function updateBtn() {
+        const btn = document.getElementById("btn-screen-mode");
+        if(!btn) return console.error("Element not found");
+        if(isFullScreen){
+          btn.classList.remove("enter-fullscreen");
+          btn.classList.add("exit-fullscreen");
+        }
+        else {
+          btn.classList.remove("exit-fullscreen");
+          btn.classList.add("enter-fullscreen");
+        }
+      }
 
     onMounted(async () => {
       await setupEditor();
@@ -80,8 +118,9 @@ export default defineComponent({
           language: customLanguage.id,
           theme: selectedTheme.value,
         });
-        //setupYjs(editorInstance, customLanguage.initialCode);
         window.addEventListener('resize', handleResize);
+        window.addEventListener("keydown", useCustomFullScreen.bind(this));
+        window.addEventListener("resize", isExitingFullScreen.bind(this));
       }
     });
 
