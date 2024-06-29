@@ -1,4 +1,4 @@
-import{m as s}from"./MonacoEditorView-S8Hx-AX5.js";import"./main-Cz7ditcM.js";/*!-----------------------------------------------------------------------------
+import{m as s}from"./MonacoEditorView-DsrVqLU2.js";import"./main-K17IvMZL.js";/*!-----------------------------------------------------------------------------
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Version: 0.47.0(69991d66135e4a1fc1cf0b1ac4ad25d429866a0d)
  * Released under the MIT license
